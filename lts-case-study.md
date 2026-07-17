@@ -113,6 +113,9 @@ this case study describes. Source:
 It installs as its own `#knotslts` flavor (x86_64), so it will not disturb an
 existing Knots install. Dev-testing only.
 
+To package a StartOS build yourself, you can follow step 5 of
+[this reproduce-and-build-your-own-Knots guide](https://github.com/chrisguida/knots-assembly/pull/2).
+
 ## Downloads
 
 Release: <https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260717.lts>
