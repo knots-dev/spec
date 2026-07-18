@@ -144,11 +144,49 @@ Release: <https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260717.
 
 ## Replicating
 
+### Reproduce the guix binaries
+
+```
+git clone https://github.com/knots-dev/bitcoin
+cd bitcoin && git checkout v29.3.knots20260717.lts
+HOSTS="x86_64-linux-gnu aarch64-linux-gnu riscv64-linux-gnu" ./contrib/guix/guix-build
+
+# release tarballs only (the *gnu.tar.gz glob excludes the -debug ones)
+sha256sum guix-build-*/output/*/*gnu.tar.gz
+```
+
+Expected: `0625e73...` (x86_64), `a282dd7a...` (aarch64), `083a2011...` (riscv64),
+matching the release `SHA256SUMS`. To contribute an attestation, run
+`contrib/guix/guix-attest` and send the resulting
+`noncodesigned.SHA256SUMS{,.asc}` for inclusion in
+[knots-dev/guix.sigs](https://github.com/knots-dev/guix.sigs).
+
+### Reproduce the assembly
+
+The assembler resolves every branch, PR head, and the base release tag by name,
+and it does not fetch anything unless given `-f`, so all refs must exist first.
+
 ```
 git clone --recurse-submodules https://github.com/knots-dev/spec   # assemble-knots.pl + specs
 git clone https://github.com/knots-dev/bitcoin
-# remotes on the bitcoin clone: pdath, luke-jr, privkeyio, knots-dev; local master = Core master
-cd bitcoin && ../spec/assemble-knots/assemble-knots.pl -b \
-    -o out.spec ../spec/knots-29.3.knots20260717.lts.spec
+cd bitcoin
+
+# forks the spec merges from, plus bitcoinknots (base release tag) and Core (master)
+for r in pdath luke-jr privkeyio knots-dev bitcoinknots; do
+  git remote add $r https://github.com/$r/bitcoin
+done
+git remote add core https://github.com/bitcoin/bitcoin
+
+# PR heads: each k<N> line is checked against origin-pull-k/<N>/head
+git remote add origin-pull-k https://github.com/bitcoinknots/bitcoin
+git config remote.origin-pull-k.fetch '+refs/pull/*/head:refs/remotes/origin-pull-k/*/head'
+
+git fetch --all --tags              # branches, PR heads, and the base release tag
+git branch -f master core/master    # the poison check needs a local Core master
+
+../spec/assemble-knots/assemble-knots.pl -b -o out.spec \
+    ../spec/knots-29.3.knots20260717.lts.spec
 git rev-parse NEW_29.x-knots-lts^{tree}   # 670aca2d74f
 ```
+
+Verified from a clean clone: `COMPLETE`, no conflicts, no autoresolvers.
