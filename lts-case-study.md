@@ -80,7 +80,10 @@ with the tool-recorded applied hashes lives in the spec repo
   attestation attached to the release:
   `0625e7346b87f7c64d90a2c6f3a5c3be618db488cacaaf8b94c13a2a9291d986`
   ([`bitcoin-29.3.knots20260717.lts-x86_64-linux-gnu.tar.gz`](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoin-29.3.knots20260717.lts-x86_64-linux-gnu.tar.gz)).
-  Independent builders reaching the same hash make it multi-party reproducible.
+  Attestation collected in
+  [knots-dev/guix.sigs](https://github.com/knots-dev/guix.sigs/tree/knots/29.3.knots20260717.lts)
+  (fork of bitcoinknots/guix.sigs); additional builders reaching the same hash
+  make it multi-party reproducible.
 
 ## What the process caught on day one
 
