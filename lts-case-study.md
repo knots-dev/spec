@@ -76,14 +76,12 @@ with the tool-recorded applied hashes lives in the spec repo
   limitdescendantsize all produce clean startup errors
 - Full [CI matrix](https://github.com/knots-dev/bitcoin/actions) on the
   published branch
-- Guix reproducible build of the tag (x86_64-linux-gnu), GPG-signed
-  attestation attached to the release:
-  `0625e7346b87f7c64d90a2c6f3a5c3be618db488cacaaf8b94c13a2a9291d986`
-  ([`bitcoin-29.3.knots20260717.lts-x86_64-linux-gnu.tar.gz`](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoin-29.3.knots20260717.lts-x86_64-linux-gnu.tar.gz)).
-  Attestation collected in
+- Guix reproducible builds of the tag for x86_64, aarch64, and riscv64
+  (all Linux), covered by a single GPG-signed `SHA256SUMS.asc`. Attestation
+  collected in
   [knots-dev/guix.sigs](https://github.com/knots-dev/guix.sigs/tree/knots/29.3.knots20260717.lts)
-  (fork of bitcoinknots/guix.sigs); additional builders reaching the same hash
-  make it multi-party reproducible.
+  (fork of bitcoinknots/guix.sigs); additional builders reaching the same
+  hashes make it multi-party reproducible.
 
 ## What the process caught on day one
 
@@ -105,16 +103,15 @@ on knots#298. That is the intended loop: catch, fix, verify, feed upstream.
 
 ## Running it on StartOS (Start9)
 
-A sideloadable StartOS package is attached to the release
-([`bitcoind_x86_64.s9pk`](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoind_x86_64.s9pk),
-`sha256 f1b02d7352ed7ca9390af40db13f3fed6e89280cf8e38db010a2c03c6033999f`).
-Its Docker build downloads the guix-attested LTS release tarball, verifies the
-signed `SHA256SUMS.asc` against the pinned guix key, checks the tarball hash,
-and ships that exact binary, so the package runs the same reproducible build
-this case study describes. Source:
+Sideloadable StartOS packages are attached to the release for x86_64, aarch64,
+and riscv64 (see Downloads). Each package's Docker build downloads the
+guix-attested LTS release tarball for its arch, verifies the signed
+`SHA256SUMS.asc` against the pinned guix key, checks the tarball hash, and ships
+that exact binary, so the package runs the same reproducible build this case
+study describes. Source:
 [knots-dev/bitcoin-knots-startos @ `lts`](https://github.com/knots-dev/bitcoin-knots-startos/tree/lts).
-It installs as its own `#knotslts` flavor (x86_64), so it will not disturb an
-existing Knots install. Dev-testing only.
+It installs as its own `#knotslts` flavor, so it will not disturb an existing
+Knots install. aarch64 covers typical arm64 Start9 boxes. Dev-testing only.
 
 To package a StartOS build yourself, you can follow step 5 of
 [this reproduce-and-build-your-own-Knots guide](https://github.com/chrisguida/knots-assembly/pull/2).
@@ -127,7 +124,11 @@ Release: <https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260717.
 |----------|--------|
 | [bitcoin-29.3.knots20260717.lts-x86_64-linux-gnu.tar.gz](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoin-29.3.knots20260717.lts-x86_64-linux-gnu.tar.gz) (guix binary) | `0625e7346b87f7c64d90a2c6f3a5c3be618db488cacaaf8b94c13a2a9291d986` |
 | [bitcoin-29.3.knots20260717.lts.tar.gz](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoin-29.3.knots20260717.lts.tar.gz) (source) | `c188018f8f998c5e554d26244948f2a0b58945bd5ed229fcc696db37f834ae02` |
-| [bitcoind_x86_64.s9pk](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoind_x86_64.s9pk) (StartOS) | `f1b02d7352ed7ca9390af40db13f3fed6e89280cf8e38db010a2c03c6033999f` |
+| [bitcoin-29.3.knots20260717.lts-aarch64-linux-gnu.tar.gz](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoin-29.3.knots20260717.lts-aarch64-linux-gnu.tar.gz) (guix binary) | `a282dd7a6774e07166c246c0ad90d632e9c3f4ddfc9a158f40c75c9138dd6fd9` |
+| [bitcoin-29.3.knots20260717.lts-riscv64-linux-gnu.tar.gz](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoin-29.3.knots20260717.lts-riscv64-linux-gnu.tar.gz) (guix binary) | `083a2011e443ed4afa878840d1459d5e23500eeeb77ebd7ba03eb78ee56c3687` |
+| [bitcoind_x86_64.s9pk](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoind_x86_64.s9pk) (StartOS) | `107c8efae418e605abbb2393d123b5064f20b62d4afb133c2e8081fd564c37e9` |
+| [bitcoind_aarch64.s9pk](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoind_aarch64.s9pk) (StartOS) | `6a878b9cc6159400921cd508f94d4edd3a25a418864d7f285887b386d7edff7a` |
+| [bitcoind_riscv64.s9pk](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/bitcoind_riscv64.s9pk) (StartOS) | `f986920e7a1743dbc8a9925f7c3204f22d0dd40ee14fb18a186a2a7a049a4bf0` |
 | [SHA256SUMS](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/SHA256SUMS) / [SHA256SUMS.asc](https://github.com/knots-dev/bitcoin/releases/download/v29.3.knots20260717.lts/SHA256SUMS.asc) | guix attestation (key `A47D99B6...A7E24E38`) |
 
 ## Known gaps (deliberate, documented)
@@ -135,9 +136,9 @@ Release: <https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260717.
 - knots#298 ships with a 6-line downstream fix the maintainer has not yet
   reviewed (reported upstream; will be swapped for the upstream version when
   the PR updates).
-- Guix builds cover x86_64-linux-gnu only so far, with a single attestation;
-  more hosts and a second builder would strengthen it. Binaries are for dev
-  testing only.
+- Guix builds cover x86_64/aarch64/riscv64 Linux with a single attestation;
+  a second independent builder matching the hashes would strengthen it.
+  Binaries are for dev testing only.
 - Three of six fixes rest on a single tested ACK; the review pool needs depth
   for a real LTS.
 
