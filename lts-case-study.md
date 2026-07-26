@@ -80,8 +80,9 @@ with the tool-recorded applied hashes lives in the spec repo
   (all Linux), covered by a single GPG-signed `SHA256SUMS.asc`. Attestation
   collected in
   [knots-dev/guix.sigs](https://github.com/knots-dev/guix.sigs/tree/knots/29.3.knots20260717.lts)
-  (fork of bitcoinknots/guix.sigs); additional builders reaching the same
-  hashes make it multi-party reproducible.
+  (fork of bitcoinknots/guix.sigs). The x86_64 build has a second independent
+  attestation (pdath) reaching the same hash, so that arch is multi-party
+  reproducible; aarch64/riscv64 await a second builder.
 
 ## What the process caught on day one
 
