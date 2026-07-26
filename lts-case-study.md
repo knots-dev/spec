@@ -137,6 +137,12 @@ Release: <https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260717.
 - knots#298 ships with a 6-line downstream fix the maintainer has not yet
   reviewed (reported upstream; will be swapped for the upstream version when
   the PR updates).
+- The s9pk Dockerfile verifies the release `SHA256SUMS.asc` against the single
+  release-signer key (quorum 1) as a download-integrity check, not as the
+  reproducibility proof. Multi-party reproducibility lives in guix.sigs (where
+  independent builders attest), by design; the package would only need a
+  higher quorum if we wanted it to enforce N-of-M signatures at install time,
+  which would require attaching a multi-signed SHA256SUMS to the release.
 - Guix builds cover x86_64/aarch64/riscv64 Linux with a single attestation;
   a second independent builder matching the hashes would strengthen it.
   Binaries are for dev testing only.
