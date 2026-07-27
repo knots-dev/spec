@@ -19,16 +19,34 @@ starts at the `v29.3.knots20260508` release commit
 bit-identical, zero deviation. Tagged
 [`v29.3.knots20260508.lts`](https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260508.lts).
 
+## Relationship to 29.4
+
+This is a working preview of the upcoming fixes-only release,
+`29.4.knots20260508`. The `knots<YYYYMMDD>` datestamp is pinned to the feature
+collection, so a fixes-only release keeps `20260508` and bumps the minor
+(`.3` -> `.4`) to signal that fixes have accumulated on the same features.
+Under that convention this preview corresponds to `29.4.knots20260508`; the
+prototype's build-dated `.knots20260717.lts` tag is a stand-in until 29.4
+formally lands, at which point the LTS baseline moves to it and keeps
+accumulating fixes.
+
 ## Inclusion criteria
 
-Critical bug fixes and security fixes only. No features, no policy changes,
-no refactors. A fix qualifies only with review from the maintainer, the dev
-team, or a tested ACK, and with no unresolved review findings. Bot approvals
-do not count. The queue lives in
+All fixes, not just critical ones: upstream Core bugfix backports and
+Knots-specific fixes. No features. Default-policy updates are in scope per dev
+consensus (spam-filter defaults are volatile), pending a firm ruling. The
+inclusion list defers to the maintainer's curated fixes collection, the `29.4`
+milestone, rather than our own critical/not-critical judgment. Each fix still
+carries review provenance (maintainer, dev team, or tested ACK) with no
+unresolved findings; bot approvals do not count. The queue lives in
 [`knots-lts-29.spec`](https://github.com/knots-dev/spec/blob/knots-spec/knots-lts-29.spec)
-with the review provenance recorded as a comment on each line.
+with the provenance recorded as a comment on each line.
 
-First point release,
+This prototype run assembled six fixes to prove the pipeline; under the
+all-fixes rule the queue expands to the full `29.4` milestone (currently 10
+open PRs, four of which are already in the six below).
+
+First prototype build,
 [`v29.3.knots20260717.lts`](https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260717.lts)
 (six fixes):
 
@@ -143,11 +161,13 @@ Release: <https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260717.
   independent builders attest), by design; the package would only need a
   higher quorum if we wanted it to enforce N-of-M signatures at install time,
   which would require attaching a multi-signed SHA256SUMS to the release.
-- Guix builds cover x86_64/aarch64/riscv64 Linux with a single attestation;
-  a second independent builder matching the hashes would strengthen it.
-  Binaries are for dev testing only.
-- Three of six fixes rest on a single tested ACK; the review pool needs depth
-  for a real LTS.
+- Guix builds cover x86_64/aarch64/riscv64 Linux. x86_64 has two independent
+  attestations (kwsantiago + pdath) reaching the same hash; aarch64 and riscv64
+  are still single-signer until a second builder reproduces them. Binaries are
+  for dev testing only.
+- The six prototype fixes were hand-picked to exercise the pipeline; the real
+  line's scope is the maintainer's `29.4` milestone, so inclusion judgment
+  moves off us and onto Luke's curated list.
 
 ## Replicating
 
