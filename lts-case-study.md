@@ -98,9 +98,10 @@ with the tool-recorded applied hashes lives in the spec repo
   (all Linux), covered by a single GPG-signed `SHA256SUMS.asc`. Attestation
   collected in
   [knots-dev/guix.sigs](https://github.com/knots-dev/guix.sigs/tree/knots/29.3.knots20260717.lts)
-  (fork of bitcoinknots/guix.sigs). The x86_64 build has a second independent
-  attestation (pdath) reaching the same hash, so that arch is multi-party
-  reproducible; aarch64/riscv64 await a second builder.
+  (fork of bitcoinknots/guix.sigs). A second builder (chrisguida) independently
+  reproduced all three arches with a byte-identical, separately-signed
+  `SHA256SUMS`, so x86_64/aarch64/riscv64 are each multi-party reproducible
+  (kwsantiago + chrisguida). A third x86_64 reproduction (pdath) also matches.
 
 ## What the process caught on day one
 
@@ -161,10 +162,9 @@ Release: <https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260717.
   independent builders attest), by design; the package would only need a
   higher quorum if we wanted it to enforce N-of-M signatures at install time,
   which would require attaching a multi-signed SHA256SUMS to the release.
-- Guix builds cover x86_64/aarch64/riscv64 Linux. x86_64 has two independent
-  attestations (kwsantiago + pdath) reaching the same hash; aarch64 and riscv64
-  are still single-signer until a second builder reproduces them. Binaries are
-  for dev testing only.
+- All three arches (x86_64/aarch64/riscv64) have two byte-identical,
+  independently-signed attestations (kwsantiago + chrisguida); more signers
+  strengthen it further. Binaries are for dev testing only.
 - The six prototype fixes were hand-picked to exercise the pipeline; the real
   line's scope is the maintainer's `29.4` milestone, so inclusion judgment
   moves off us and onto Luke's curated list.
