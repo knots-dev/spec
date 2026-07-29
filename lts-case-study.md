@@ -174,6 +174,7 @@ Release: <https://github.com/knots-dev/bitcoin/releases/tag/v29.3.knots20260717.
 ### Reproduce the guix binaries
 
 ```
+git clone https://github.com/knots-dev/guix.sigs
 git clone https://github.com/knots-dev/bitcoin
 cd bitcoin && git checkout v29.3.knots20260717.lts
 HOSTS="x86_64-linux-gnu aarch64-linux-gnu riscv64-linux-gnu" ./contrib/guix/guix-build
@@ -183,10 +184,31 @@ sha256sum guix-build-*/output/*/*gnu.tar.gz
 ```
 
 Expected: `0625e73...` (x86_64), `a282dd7a...` (aarch64), `083a2011...` (riscv64),
-matching the release `SHA256SUMS`. To contribute an attestation, run
-`contrib/guix/guix-attest` and send the resulting
-`noncodesigned.SHA256SUMS{,.asc}` for inclusion in
-[knots-dev/guix.sigs](https://github.com/knots-dev/guix.sigs).
+matching the release `SHA256SUMS`. Build all three arches so your attestation
+covers the same set as the others (`guix-verify` requires every signer's
+`SHA256SUMS` to be byte-identical).
+
+### Contribute an attestation
+
+From the `bitcoin` checkout (it reads the `guix-build-*` outputs), sign the
+hashes with your own key and drop them into your signer directory in the
+`guix.sigs` clone:
+
+```
+# SIGNER=<gpg-key-id>=<signer-name>; the name becomes the guix.sigs subdirectory.
+# Drop the "=<name>" if your GPG key's uid already matches the name you want.
+env GUIX_SIGS_REPO=../guix.sigs SIGNER=0xYOURKEYID=yourname \
+    ./contrib/guix/guix-attest
+
+# sanity-check your own hashes + signature before submitting
+env GUIX_SIGS_REPO=../guix.sigs ./contrib/guix/guix-verify
+```
+
+This writes `29.3.knots20260717.lts/<yourname>/noncodesigned.SHA256SUMS{,.asc}`.
+Open a PR to [knots-dev/guix.sigs](https://github.com/knots-dev/guix.sigs)
+adding that directory (and `builder-keys/<yourname>.gpg` if your key isn't
+already there). Use `guix-attest`, not a hand-made `sha256sum` file, so the
+format matches and `guix-verify` passes.
 
 ### Reproduce the assembly
 
